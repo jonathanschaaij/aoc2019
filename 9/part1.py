@@ -6,10 +6,9 @@ computer =[1102,34463338,34463338,63,1007,63,34463338,63,1005,63,53,1102,3,1,100
 # computer = [9,3,203,-1,99]
 # computer = [109,1,203,11,209,8,204,1,99,10,0,42,0]
 
-
 def getParameterMode(command_pos):
     command = str(computer[command_pos])
-    param = [0,0]
+    param = [0,0,0]
     try:
         param[0] = int(command[-3])
     except:
@@ -18,8 +17,11 @@ def getParameterMode(command_pos):
         param[1] = int(command[-4])
     except:
         param[1] = 0
+    try:
+        param[2] = int(command[-5])
+    except:
+        param[2] = 0
     return param
-
 def getParameter(command_pos):
     param = getParameterMode(command_pos)
     para = [0,0]
@@ -31,7 +33,6 @@ def getParameter(command_pos):
         else:
             para[x] = computer[computer[command_pos+x+1]]
     return para
-
 def getFirstParameter(command_pos):
     param = getParameterMode(command_pos)
     if param[0] ==1:
@@ -40,6 +41,15 @@ def getFirstParameter(command_pos):
         output = computer[relative_base+computer[command_pos+1]]
     else:
         output = computer[computer[command_pos+1]]
+    return output
+def getThirdParameter(command_pos):
+    param = getParameterMode(command_pos)
+    if param[2] ==0:
+        output = computer[command_pos+3]
+    elif param[2] == 2:
+        output = relative_base+computer[command_pos+3]
+    else:
+        print("Third Parameter not 0 or 2!")
     return output
 
 while len(computer) < 1100:
@@ -54,31 +64,33 @@ while True:
 
 
     if opcode == 99:
+        print("Finished running programm")
         break
     elif opcode == 1:
-        print("Add")
+        # print("Add")
         para = getParameter(command_pos)
-        computer[computer[command_pos+3]] = para[0]+para[1]
+        computer[getThirdParameter(command_pos)] = para[0]+para[1]
         step = 4
     elif opcode == 2:
-        print("Multiply")
+        # print("Multiply")
         para = getParameter(command_pos)
-        computer[computer[command_pos+3]] = para[0]*para[1]
+        computer[getThirdParameter(command_pos)] = para[0]*para[1]
         step = 4
     elif opcode == 3:
-        # print("Input")
+        # print("command: ", command)
         user_input = input("What is the input: ")
         if getParameterMode(command_pos)[0] == 0:
             computer[computer[command_pos+1]] = int(user_input)
-        else:
+        elif getParameterMode(command_pos)[0] == 2:
             computer[relative_base+computer[command_pos+1]] = int(user_input)
+        else:
+            print("Something has gone wrong, Opcode=1")
         step = 2
     elif opcode == 4:
-        #Something
         print("The output is: ",getFirstParameter(command_pos))
         step = 2
     elif opcode == 5:
-        print("Jump-if-True")
+        # print("Jump-if-True:", para)
         para = getParameter(command_pos)
         if para[0]:
             command_pos = para[1]
@@ -86,7 +98,7 @@ while True:
         else:
             step = 3
     elif opcode == 6:
-        print("Jump-if-False")
+        # print("Jump-if-False")
         para = getParameter(command_pos)
         # print("Opcode 6; para[0]: ",para[0])
         if not para[0]:
@@ -95,14 +107,14 @@ while True:
         else:
             step = 3
     elif opcode == 7:
-        print("Less Than")
+        # print("Less Than")
         para = getParameter(command_pos)
-        computer[computer[command_pos+3]] =1 if para[0]<para[1] else 0
+        computer[getThirdParameter(command_pos)] =1 if para[0]<para[1] else 0
         step = 4
     elif opcode == 8:
         print("Equal")
         para = getParameter(command_pos)
-        computer[computer[command_pos+3]] =1 if para[0]==para[1] else 0
+        computer[getThirdParameter(command_pos)] =1 if para[0]==para[1] else 0
         step = 4
     elif opcode == 9:
         print("Relative Base")
