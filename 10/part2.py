@@ -55,40 +55,49 @@ input = ''.join(input)
 
 asteroids = {}
 for i in range(1,len(input)+1):
-    print(i,input[i-1])
+    # print(i,input[i-1])
     if input[i-1] == '#':
         asteroids[i] = 0
 
-print(asteroids)
+# print(asteroids)
 
 best = 0
-for tested in asteroids:
-    print("Now testing: ", tested)
-    slopes = []
-    y_tes = (tested-1)//width
-    x_tes = (tested-1) - y_tes*width
-    # print("X,Y: ",x_tes,y_tes)
-    for asteroid in asteroids:
-        if tested == asteroid:
-            continue
-        y_as = (asteroid-1)//width
-        x_as = (asteroid-1) - y_as*width
+best_pos = [0,0]
 
-        d_x = x_as - x_tes
-        d_y = y_as - y_tes
+slopes = []
+y_tes = (1070)//width
+x_tes = (1070) - y_tes*width
+# print("X,Y: ",x_tes,y_tes)
+for asteroid in asteroids:
+    if 1071 == asteroid:
+        continue
+    y_as = (asteroid-1)//width
+    x_as = (asteroid-1) - y_as*width
 
-        slope = math.atan2(d_y, d_x)
-        if slope in slopes:
-            continue
-        else:
-            # print(slopes, slope)
-            slopes.append(slope)
+    d_x = x_as - x_tes
+    d_y = y_as - y_tes
 
-    asteroids[tested] = len(slopes)
-    if len(slopes) > best:
-        # print("New best: ",x_tes,y_tes, tested)
-        best = len(slopes)
-    if tested == 13:
-        print(slopes)
+    slope = math.atan2(d_x, -d_y)
+    if slope in slopes:
+        continue
+    else:
+        asteroids[asteroid]=slope
+        slopes.append(slope)
 
-print(best)
+if len(slopes) > best:
+    best_pos = [x_tes, y_tes]
+    best = len(slopes)
+
+for asteroid in asteroids:
+    if asteroids[asteroid] < 0:
+        asteroids[asteroid] += 2*math.pi
+sorted
+
+n=1
+for asteroid, slope in sorted(asteroids.items(), key = lambda kv:(kv[1], kv[0])):
+    if slope > 0:
+        n+=1
+    if n > 198 and n < 202:
+        y = (asteroid-1)//width
+        x = (asteroid-1) - y*width
+        print(n, asteroid, (x,y))
